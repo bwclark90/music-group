@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+
 <body>
   <form>
     <label for="input">Search something</label>
@@ -16,36 +18,49 @@
 
   </div>
 
- 
+
 
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
   <script>
-    document.getElementById('search').addEventListener('click', event =>{
+    document.getElementById('search').addEventListener('click', event => {
       event.preventDefault()
-    
-    axios.get(`https://api.happi.dev/v1/music?q=${document.getElementById('input').value}&limit=&apikey=544a5erfLVteu2YTMB2XSwksPadHPXHVftNTxfGiosKhbZalYfLK8zjm&type=&lyrics=0`)
-      .then(res => {
-        let search = res.data.result
-        console.log(res.data)
-        document.getElementById('songDiv').innerHTML = ''
-        for (let i = 0; i < search.length; i++) {           
-        document.getElementById('songDiv').innerHTML += `
-        <h2>Track: ${search[i].track}</h2>
-        <h5>Artist: ${search[i].artist}</h5>
-        <h6>Album: ${search[i].album}</h6>
-        <img src= ${search[i].cover} alt=${search[i].album}>
-        `
-        if(search[i].haslyrics){
-          document.getElementById('songDiv').innerHTML += `
-          <p>Lyrics: ${search[i].api_lyrics}</p>
-          `
-        }
-        }
 
-      })
-      .catch(err => console.error(err))
+      axios.get(`https://api.happi.dev/v1/music?q=${document.getElementById('input').value}&limit=&apikey=544a5erfLVteu2YTMB2XSwksPadHPXHVftNTxfGiosKhbZalYfLK8zjm&type=&lyrics=1`)
+        .then(res => {
+          let search = res.data.result
+          console.log(res.data)
+          document.getElementById('songDiv').innerHTML = ''
+          for (let i = 0; i < search.length; i++) {
+            if (search[i].haslyrics) {
+              axios.get(`https://api.happi.dev/v1/music/artists/${search[i].id_artist}/albums/${search[i].id_album}/tracks/${search[i].id_track}/lyrics?apikey=544a5erfLVteu2YTMB2XSwksPadHPXHVftNTxfGiosKhbZalYfLK8zjm
+              `)
+                .then(resp => {
+                  let lyric = resp.data.result.lyrics
+                  console.log(lyric)
+
+                  document.getElementById('songDiv').innerHTML += `
+                  <h2>Track: ${search[i].track}</h2>
+                  <h5>Artist: ${search[i].artist}</h5>
+                  <h6>Album: ${search[i].album}</h6>
+                  <img src= ${search[i].cover} alt=${search[i].album}>
+                  <p>Lyrics: ${lyric}</p>
+                  `
+                })
+            } else {
+              document.getElementById('songDiv').innerHTML += `
+              <h2>Track: ${search[i].track}</h2>
+              <h5>Artist: ${search[i].artist}</h5>
+              <h6>Album: ${search[i].album}</h6>
+              <img src= ${search[i].cover} alt=${search[i].album}>
+              `
+            }
+          }
+
+        })
+        .catch(err => console.error(err))
     })
-</script>
+  </script>
 </body>
+
 </html>
