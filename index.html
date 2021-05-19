@@ -23,22 +23,24 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
   <script>
+    // listen for input
     document.getElementById('search').addEventListener('click', event => {
       event.preventDefault()
-
+      // first query for user search input
       axios.get(`https://api.happi.dev/v1/music?q=${document.getElementById('input').value}&limit=&apikey=544a5erfLVteu2YTMB2XSwksPadHPXHVftNTxfGiosKhbZalYfLK8zjm&type=&lyrics=1`)
         .then(res => {
           let search = res.data.result
           console.log(res.data)
           document.getElementById('songDiv').innerHTML = ''
+          // loop to list results
           for (let i = 0; i < search.length; i++) {
             if (search[i].haslyrics) {
+              // query for lyrics if the song  value of haslyric is true
               axios.get(`https://api.happi.dev/v1/music/artists/${search[i].id_artist}/albums/${search[i].id_album}/tracks/${search[i].id_track}/lyrics?apikey=544a5erfLVteu2YTMB2XSwksPadHPXHVftNTxfGiosKhbZalYfLK8zjm
               `)
                 .then(resp => {
                   let lyric = resp.data.result.lyrics
-                  console.log(lyric)
-
+                  // output information
                   document.getElementById('songDiv').innerHTML += `
                   <h2>Track: ${search[i].track}</h2>
                   <h5>Artist: ${search[i].artist}</h5>
@@ -48,6 +50,7 @@
                   `
                 })
             } else {
+              // output information without lyrics
               document.getElementById('songDiv').innerHTML += `
               <h2>Track: ${search[i].track}</h2>
               <h5>Artist: ${search[i].artist}</h5>
@@ -59,6 +62,8 @@
 
         })
         .catch(err => console.error(err))
+        // clear input form
+        document.getElementById('input').value=''
     })
   </script>
 </body>
