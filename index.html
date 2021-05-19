@@ -34,9 +34,15 @@
         <h2>Track: ${search[i].track}</h2>
         <h5>Artist: ${search[i].artist}</h5>
         <h6>Album: ${search[i].album}</h6>
-        <img src= '${search[1].cover}' alt='${search[i].album}>'
+        <img src= ${search[i].cover} alt=${search[i].album}>
         `
+        if(search[i].haslyrics){
+          document.getElementById('songDiv').innerHTML += `
+          <p>Lyrics: ${search[i].api_lyrics}</p>
+          `
         }
+        }
+
       })
       .catch(err => console.error(err))
     })
