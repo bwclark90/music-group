@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <form>
+    <label for="input">Search something</label>
+    <input type="text" id='input'>
+    <button id='search'>submit</button>
+  </form>
+  <div id="songDiv">
+
+  </div>
+
+ 
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <script>
+    document.getElementById('search').addEventListener('click', event =>{
+      event.preventDefault()
+    
+    axios.get(`https://api.happi.dev/v1/music?q=${document.getElementById('input').value}&limit=&apikey=544a5erfLVteu2YTMB2XSwksPadHPXHVftNTxfGiosKhbZalYfLK8zjm&type=&lyrics=0`)
+      .then(res => {
+        console.log(res.data)
+        document.getElementById('songDiv').innerHTML = `
+        ${res.data.result[0].track}
+        `
+      })
+      .catch(err => console.error(err))
+    })
+</script>
+</body>
+</html>
